@@ -1,11 +1,23 @@
-var docxConverter = require('docx-pdf');
+const path = require('path');
+const fs = require('fs').promises;
 
+const libre = require('libreoffice-convert');
+libre.convertAsync = require('util').promisify(libre.convert);
 
+async function main() {
+    const ext = '.pdf'
+    const outputPath = path.dirname(`example${ext}`);
 
-docxConverter('./input.docx','./output.pdf',function(err,result){
-  if(err){
-    console.log(err);
-  }
-  console.log('result'+result);
+    // Read file
+    const docxBuf = await fs.readFile(inputPath);
+
+    // Convert it to pdf format with undefined filter (see Libreoffice docs about filter)
+    let pdfBuf = await libre.convertAsync(docxBuf, ext, undefined);
+    
+    // Here in done you have pdf file which you can save or transfer in another stream
+    await fs.writeFile(outputPath, pdfBuf);
+}
+
+main().catch(function (err) {
+    console.log(`Error converting file: ${err}`);
 });
-
