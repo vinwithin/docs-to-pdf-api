@@ -16,6 +16,9 @@ async function uploadFiles(req, res) {
   
     await storage.bucket(bucketName).upload(`uploads/${file_name}`, options);
     console.log(`${file_name} uploaded to ${bucketName}`);
+    fs.rmSync(`uploads/${file_name}`, {
+      force: true,
+    });
       
     // console.log(input);
     res.json({ message: "Successfully uploaded files" });
