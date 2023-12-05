@@ -1,7 +1,7 @@
 const express = require('express')
 
 const multer = require("multer");
-const uploadFiles = require('./src');
+const uploadFiles = require('./src/handler');
     
 
 
