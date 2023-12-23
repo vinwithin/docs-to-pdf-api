@@ -32,25 +32,32 @@ app.get('/', (req, res) => {
 
 app.post("/upload_files", upload.single("file"), async function(req, res){
   const file = req.file.filename;
-  const file_path = `uploads/${file}`
-  
+  const file_path = `uploads/${file}`;
+
+  try{
   docxConverter(`uploads/${file}`, `uploads/${file_name}`, function(err, result){
-    if(err){
-      console.log("convert fail");
-    }
-      console.log("success convert");
+    
   });
   const options = {
     destination: file_name,
     
   };
+
   await storageBucket.bucket(bucketName).upload(file_path, options);
   fs.rmSync(file_path, {
     force: true,
   });
-
-res.json({ message: "Successfully uploaded files" });
+  res.json({ message: "Successfully uploaded files", status:"succes" });
+}catch{
+  res.json({message:"gagal mengubah gambar", status:"fail"});
+}
 })
+
+
+
+
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
