@@ -8,7 +8,7 @@ const projectID = process.env.PROJECT_ID;
 const keyFileName = process.env.KEYFILENAME;
 const storageBucket = new Storage({projectID, keyFileName});
 const bucketName = process.env.BUCKET_NAME;
-const date  = new Date();
+const date  = Date.now();
 const file_name = date + ".pdf";
 
 
@@ -47,7 +47,9 @@ app.post("/upload_files", upload.single("file"), async function(req, res){
   fs.rmSync(file_path, {
     force: true,
   });
-  res.json({ message: "Successfully uploaded files", status:"succes" });
+  res.json({ message: "Successfully uploaded files", status:"succes", data : {
+    "url" : `https://storage.googleapis.com/${bucketName}/${file_name}`
+  } });
 }catch{
   res.json({message:"gagal mengubah gambar", status:"fail"});
 }
