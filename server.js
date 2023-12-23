@@ -8,9 +8,8 @@ const projectID = process.env.PROJECT_ID;
 const keyFileName = process.env.KEYFILENAME;
 const storageBucket = new Storage({projectID, keyFileName});
 const bucketName = process.env.BUCKET_NAME;
-const file_name  = 'output.pdf';
-
-
+const date  = new Date();
+const file_name = date + ".pdf";
 
 
 const storage = multer.diskStorage({
@@ -31,8 +30,9 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.post("/upload_files", upload.single("file"), function(req, res){
+app.post("/upload_files", upload.single("file"), async function(req, res){
   const file = req.file.filename;
+  const file_path = `uploads/${file}`
   
   docxConverter(`uploads/${file}`, `uploads/${file_name}`, function(err, result){
     if(err){
@@ -44,8 +44,8 @@ app.post("/upload_files", upload.single("file"), function(req, res){
     destination: file_name,
     
   };
-  storageBucket.bucket(bucketName).upload(`uploads/${file_name}`, options);
-  fs.rmSync(`uploads/${file_name}`, {
+  await storageBucket.bucket(bucketName).upload(file_path, options);
+  fs.rmSync(file_path, {
     force: true,
   });
 
