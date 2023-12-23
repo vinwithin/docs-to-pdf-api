@@ -1,8 +1,8 @@
 const express = require('express')
 
 const multer = require("multer");
-const uploadFiles = require('./src/handler');
-    
+
+const router = require("./src/handler")
 
 
 
@@ -25,11 +25,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
-app.post("/upload_files", upload.single("file"), uploadFiles)
-  uploadFiles;
-
-    
-
+app.use("/upload_files", router)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
